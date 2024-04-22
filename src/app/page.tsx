@@ -6,6 +6,8 @@ import LoadingSpinner from "./components/LoadingSpinner";
 
 import * as faceapi from 'face-api.js';
 import ResultMessage from "./components/ResultMessage";
+import useWebcam from "./hooks/useWebcam";
+import useFaceApiModels from "./hooks/useFaceApiModels";
 
 export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -13,29 +15,9 @@ export default function Home() {
 
   const [expression, setExpression] = useState<String>();
 
-  useEffect(() => {
-    navigator.mediaDevices.getUserMedia({video: true}).then(stream => {
-      const videoElement =  videoRef.current;
-
-      if(videoElement){
-        videoElement.srcObject = stream;
-      }
-    });
-
-  }, []);
-
-  useEffect(() => {
-    // carregando modelos a ser utilizado da faceapi
-    Promise.all([
-      faceapi.loadTinyFaceDetectorModel('/models'),
-      faceapi.loadFaceLandmarkModel('/models'),
-      faceapi.loadFaceExpressionModel('/models'),
-    ]).then(() => {
-      console.log('models loadead');
-    })
-
-  }, [])
-
+  useWebcam(videoRef);
+  useFaceApiModels();
+  
   async function handleLoadedMetadata(){
     const videoElement =  videoRef.current as HTMLVideoElement;
     const canvasElement = canvasRef.current as HTMLCanvasElement;
@@ -77,19 +59,17 @@ export default function Home() {
     <section className="flex flex-col gap-6 flex-1 w-full">
       <div className="bg-white rounded-xl p-2">
         <div className="relative flex items-center justify-center aspect-video w-full">
-          {/* Substitua pela Webcam */}
           <div className="aspect-video rounded-lg bg-gray-300 w-full">
             <div className="relative">
               <video 
               onLoadedMetadata={handleLoadedMetadata}
               ref={videoRef} 
               autoPlay
-              className="rounded aspect-video"
+              className="rounded"
               ></video>
               <canvas ref={canvasRef} className="absolute inset-0 w-full h-full"></canvas>
             </div>
           </div>
-          {/* Substitua pela Webcam */}
         </div>
       </div>
       <div
