@@ -33,6 +33,12 @@ export default function Home() {
     if(detection){
       setExpression(detection.expressions.asSortedArray()[0].expression);
 
+      // Obtenha as informações de idade e gênero
+      const age = detection.age;
+      const gender = detection.gender;
+
+      console.log(age);
+
 
       // obtendo dimensções do video no browser de forma responsiva
       const dimensions = {
