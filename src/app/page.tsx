@@ -4,11 +4,11 @@ import { useEffect, useRef } from "react";
 import Header from "./components/Header";
 import LoadingSpinner from "./components/LoadingSpinner";
 
+import * as faceapi from 'face-api.js';
+
 export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null)
-
-
-  console.log(videoRef.current);
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({video: true}).then(stream => {
@@ -16,9 +16,45 @@ export default function Home() {
 
       if(videoElement){
         videoElement.srcObject = stream;
-        videoElement.play();
       }
     });
+
+  }, []);
+
+  useEffect(() => {
+    Promise.all([
+      faceapi.loadTinyFaceDetectorModel('/models'),
+      faceapi.loadFaceLandmarkModel('/models'),
+      faceapi.loadFaceExpressionModel('/models'),
+    ]).then(() => {
+      console.log('models loadead');
+    })
+
+  }, [])
+
+  useEffect(() => {
+    const videoElement =  videoRef.current as HTMLVideoElement;
+    const canvasElement = canvasRef.current as HTMLCanvasElement;
+
+    if( !videoElement || !canvasElement) return;
+
+    async function detectFace(){
+      const detection = await faceapi.detectSingleFace(videoElement as HTMLVideoElement, new faceapi.TinyFaceDetectorOptions)
+
+      if(detection){
+        const dimensions = {
+          width: videoElement?.offsetWidth,
+          height: videoElement?.offsetHeight
+        };
+
+        faceapi.matchDimensions(canvasElement, dimensions);
+        const resizedResults =faceapi.resizeResults(detection, dimensions);
+        faceapi.draw.drawDetections(canvasElement, resizedResults);
+      }
+
+    }
+
+  detectFace(); 
 
   }, [])
 
@@ -30,7 +66,10 @@ export default function Home() {
         <div className="relative flex items-center justify-center aspect-video w-full">
           {/* Substitua pela Webcam */}
           <div className="aspect-video rounded-lg bg-gray-300 w-full">
-            <video ref={videoRef} src=""></video>
+            <div className="relative">
+              <video ref={videoRef} autoPlay></video>
+              <canvas ref={canvasRef} className="absolute inset-0 w-full h-full"></canvas>
+            </div>
           </div>
           {/* Substitua pela Webcam */}
         </div>
