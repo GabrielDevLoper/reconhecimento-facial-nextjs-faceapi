@@ -32,31 +32,30 @@ export default function Home() {
 
   }, [])
 
-  useEffect(() => {
+  async function handleLoadedMetadata(){
     const videoElement =  videoRef.current as HTMLVideoElement;
     const canvasElement = canvasRef.current as HTMLCanvasElement;
 
     if( !videoElement || !canvasElement) return;
 
-    async function detectFace(){
-      const detection = await faceapi.detectSingleFace(videoElement as HTMLVideoElement, new faceapi.TinyFaceDetectorOptions)
+    const detection = await faceapi.detectSingleFace(videoElement as HTMLVideoElement, new faceapi.TinyFaceDetectorOptions)
 
-      if(detection){
-        const dimensions = {
-          width: videoElement?.offsetWidth,
-          height: videoElement?.offsetHeight
-        };
+    if(detection){
+      const dimensions = {
+        width: videoElement?.offsetWidth,
+        height: videoElement?.offsetHeight
+      };
 
-        faceapi.matchDimensions(canvasElement, dimensions);
-        const resizedResults =faceapi.resizeResults(detection, dimensions);
-        faceapi.draw.drawDetections(canvasElement, resizedResults);
-      }
-
+      // aprimorar o encontro da face
+      faceapi.matchDimensions(canvasElement, dimensions);
+      const resizedResults =faceapi.resizeResults(detection, dimensions);
+      faceapi.draw.drawDetections(canvasElement, resizedResults);
     }
 
-  detectFace(); 
-
-  }, [])
+    setTimeout(() => {
+      handleLoadedMetadata();
+    }, 1000);
+  }
 
   return (
     <main className="min-h-screen flex flex-col lg:flex-row md:justify-between gap-14 xl:gap-40 p-10 items-center container mx-auto">
@@ -67,7 +66,12 @@ export default function Home() {
           {/* Substitua pela Webcam */}
           <div className="aspect-video rounded-lg bg-gray-300 w-full">
             <div className="relative">
-              <video ref={videoRef} autoPlay></video>
+              <video 
+              onLoadedMetadata={handleLoadedMetadata}
+              ref={videoRef} 
+              autoPlay
+              className="rounded aspect-video"
+              ></video>
               <canvas ref={canvasRef} className="absolute inset-0 w-full h-full"></canvas>
             </div>
           </div>
