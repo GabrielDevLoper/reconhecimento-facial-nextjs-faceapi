@@ -1,14 +1,17 @@
 'use client'
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Header from "./components/Header";
 import LoadingSpinner from "./components/LoadingSpinner";
 
 import * as faceapi from 'face-api.js';
+import ResultMessage from "./components/ResultMessage";
 
 export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  const [expression, setExpression] = useState<String>();
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({video: true}).then(stream => {
@@ -45,6 +48,9 @@ export default function Home() {
       .withFaceExpressions();
 
     if(detection){
+      setExpression(detection.expressions.asSortedArray()[0].expression);
+
+
       // obtendo dimensções do video no browser de forma responsiva
       const dimensions = {
         width: videoElement?.offsetWidth,
@@ -53,8 +59,7 @@ export default function Home() {
 
       // aprimorar o encontro da face
       faceapi.matchDimensions(canvasElement, dimensions);
-      const resizedResults =faceapi.resizeResults(detection, dimensions);
-
+      const resizedResults = faceapi.resizeResults(detection, dimensions);
       faceapi.draw.drawDetections(canvasElement, resizedResults);
       faceapi.draw.drawFaceLandmarks(canvasElement, resizedResults);
       faceapi.draw.drawFaceExpressions(canvasElement, resizedResults);
@@ -63,7 +68,7 @@ export default function Home() {
 
     setTimeout(() => {
       handleLoadedMetadata();
-    }, 1000);
+    }, 500);
   }
 
   return (
@@ -90,10 +95,8 @@ export default function Home() {
       <div
         className={`bg-white rounded-xl px-8 py-6 flex gap-6 lg:gap-20 items-center h-[200px] justify-center`}
       >
-        <p className="text-4xl text-center flex justify-center items-center text-yellow-300">
-          {/* Substitua pelo texto */}
-          <LoadingSpinner />
-          {/* Substitua pelo texto */}
+        <p className="text-4xl text-center flex justify-center items-center text-black">
+          <ResultMessage expression={expression}/>
         </p>
       </div>
     </section>
