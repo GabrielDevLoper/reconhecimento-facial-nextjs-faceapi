@@ -38,9 +38,13 @@ export default function Home() {
 
     if( !videoElement || !canvasElement) return;
 
-    const detection = await faceapi.detectSingleFace(videoElement as HTMLVideoElement, new faceapi.TinyFaceDetectorOptions)
+    const detection = await faceapi.detectSingleFace(videoElement as HTMLVideoElement, 
+      new faceapi.TinyFaceDetectorOptions)
+      .withFaceLandmarks()
+      .withFaceExpressions();
 
     if(detection){
+      // obtendo dimensções do video no browser de forma responsiva
       const dimensions = {
         width: videoElement?.offsetWidth,
         height: videoElement?.offsetHeight
@@ -48,8 +52,13 @@ export default function Home() {
 
       // aprimorar o encontro da face
       faceapi.matchDimensions(canvasElement, dimensions);
+      
       const resizedResults =faceapi.resizeResults(detection, dimensions);
+
       faceapi.draw.drawDetections(canvasElement, resizedResults);
+      faceapi.draw.drawFaceLandmarks(canvasElement, resizedResults);
+      faceapi.draw.drawFaceExpressions(canvasElement, resizedResults);
+
     }
 
     setTimeout(() => {
