@@ -14,6 +14,8 @@ export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const [expression, setExpression] = useState<String>();
+  const [age, setAge] = useState<Number>();
+  const [gender, setGender] = useState<String>();
 
   useWebcam(videoRef);
   useFaceApiModels();
@@ -38,7 +40,10 @@ export default function Home() {
       const gender = detection.gender;
 
       console.log(age);
+      console.log(gender);
 
+      setAge(Math.round(age))
+      setGender(gender === 'male' ? 'Masculino' : 'Feminino')
 
       // obtendo dimensções do video no browser de forma responsiva
       const dimensions = {
@@ -82,8 +87,16 @@ export default function Home() {
       <div
         className={`bg-white rounded-xl px-8 py-6 flex gap-6 lg:gap-20 items-center h-[200px] justify-center`}
       >
-        <p className="text-4xl text-center flex justify-center items-center text-black">
+        <p className="text-2xl text-center flex justify-center items-center text-black">
           <ResultMessage expression={expression}/>
+
+          
+        </p>
+        <p className="text-2xl text-center flex justify-center items-center text-black">
+        sua idade estimada é: {age} anos
+        </p>
+        <p className="text-2xl text-center flex justify-center items-center text-black">
+        seu genero é: {gender}
         </p>
       </div>
     </section>
