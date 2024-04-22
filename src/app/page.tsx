@@ -22,6 +22,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    // carregando modelos a ser utilizado da faceapi
     Promise.all([
       faceapi.loadTinyFaceDetectorModel('/models'),
       faceapi.loadFaceLandmarkModel('/models'),
@@ -52,7 +53,6 @@ export default function Home() {
 
       // aprimorar o encontro da face
       faceapi.matchDimensions(canvasElement, dimensions);
-      
       const resizedResults =faceapi.resizeResults(detection, dimensions);
 
       faceapi.draw.drawDetections(canvasElement, resizedResults);
