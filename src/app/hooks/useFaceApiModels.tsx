@@ -8,6 +8,7 @@ export default function useFaceApiModels(){
           faceapi.loadTinyFaceDetectorModel('/models'),
           faceapi.loadFaceLandmarkModel('/models'),
           faceapi.loadFaceExpressionModel('/models'),
+          faceapi.loadAgeGenderModel('/models'),
         ]).then(() => {
           console.log('models loadead');
         })

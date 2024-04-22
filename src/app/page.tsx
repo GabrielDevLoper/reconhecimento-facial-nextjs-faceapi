@@ -27,7 +27,8 @@ export default function Home() {
     const detection = await faceapi.detectSingleFace(videoElement as HTMLVideoElement, 
       new faceapi.TinyFaceDetectorOptions)
       .withFaceLandmarks()
-      .withFaceExpressions();
+      .withFaceExpressions()
+      .withAgeAndGender();
 
     if(detection){
       setExpression(detection.expressions.asSortedArray()[0].expression);
