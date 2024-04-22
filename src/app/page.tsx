@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Header from "./components/Header";
-import LoadingSpinner from "./components/LoadingSpinner";
 
 import * as faceapi from 'face-api.js';
 import ResultMessage from "./components/ResultMessage";
+
 import useWebcam from "./hooks/useWebcam";
 import useFaceApiModels from "./hooks/useFaceApiModels";
 
@@ -90,11 +90,13 @@ export default function Home() {
         <p className="text-2xl text-center flex justify-center items-center text-black">
           <ResultMessage expression={expression}/>
 
-          
+        
         </p>
         <p className="text-2xl text-center flex justify-center items-center text-black">
         sua idade estimada é: {age} anos
+        
         </p>
+
         <p className="text-2xl text-center flex justify-center items-center text-black">
         seu genero é: {gender}
         </p>

@@ -13,7 +13,7 @@
 
 <p>Esses recursos possibilitam uma ampla gama de aplicações, desde análise de sentimentos em vídeos até sistemas de segurança baseados em reconhecimento facial.</p>
 
-<p>Para o desenvolvimento desse projeto foi utilizado, framework nextjs, tailwindcss para estilizacao e faceapi para utilizar o reconhecimento facial</p>
+<p>Para o desenvolvimento desse projeto foi utilizado, framework nextjs, tailwindcss para estilizacao, faceapi para utilizar o reconhecimento facial e typescript</p>
 
 
 
