@@ -95,8 +95,7 @@ export default function Home() {
         </p>
         <p className="text-2xl text-center flex justify-center items-center text-black">
           
-        sua idade estimada é: {age} anos
-        
+          Sua idade estimada é: {age !== undefined ? age.toString() : ''}
         </p>
 
         <p className="text-2xl text-center flex justify-center items-center text-black">
