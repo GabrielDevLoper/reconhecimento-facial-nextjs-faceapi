@@ -88,11 +88,13 @@ export default function Home() {
         className={`bg-white rounded-xl px-8 py-6 flex gap-6 lg:gap-20 items-center h-[200px] justify-center`}
       >
         <p className="text-2xl text-center flex justify-center items-center text-black">
+          {/* @ts-ignore */}
           <ResultMessage expression={expression}/>
 
         
         </p>
         <p className="text-2xl text-center flex justify-center items-center text-black">
+          
         sua idade estimada é: {age} anos
         
         </p>
