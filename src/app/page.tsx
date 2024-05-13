@@ -16,7 +16,7 @@ export default function Home() {
   const [expression, setExpression] = useState<String>();
   const [age, setAge] = useState<Number>();
   const [gender, setGender] = useState<String>();
-
+  const [capturedPhoto, setCapturedPhoto] = useState<string>();
   useWebcam(videoRef);
   useFaceApiModels();
   
@@ -65,6 +65,36 @@ export default function Home() {
     }, 500);
   }
 
+  function capturePhoto() {
+    const videoElement = videoRef.current;
+    const canvasElement = canvasRef.current;
+
+    if (!videoElement || !canvasElement) return;
+
+    const context = canvasElement.getContext('2d');
+    if (!context) return;
+
+    canvasElement.width = videoElement.videoWidth;
+    canvasElement.height = videoElement.videoHeight;
+
+    context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+
+    // Convertendo o canvas para base64
+    const photoData = canvasElement.toDataURL('image/png');
+    setCapturedPhoto(photoData);
+  }
+
+  function downloadPhoto() {
+    if (!capturedPhoto) return;
+
+    const link = document.createElement('a');
+    link.href = capturedPhoto;
+    link.download = 'captured_photo.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   return (
     <main className="min-h-screen flex flex-col lg:flex-row md:justify-between gap-14 xl:gap-40 p-10 items-center container mx-auto">
     <Header />
@@ -101,6 +131,25 @@ export default function Home() {
         <p className="text-2xl text-center flex justify-center items-center text-black">
         seu genero é: {gender}
         </p>
+
+        <button
+            onClick={capturePhoto}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Capturar Foto
+          </button>
+          {capturedPhoto && (
+            <div>
+              <h2>Foto Capturada:</h2>
+              <img src={capturedPhoto} alt="Captured" />
+              <button
+                onClick={downloadPhoto}
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Baixar Foto
+              </button>
+            </div>
+          )}
       </div>
     </section>
   </main>
